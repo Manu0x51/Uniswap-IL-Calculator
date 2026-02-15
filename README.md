@@ -3,6 +3,8 @@
 A professional-grade dashboard for simulating and calculating **Impermanent Loss (IL)** in Uniswap V3 concentrated liquidity positions. This tool helps liquidity providers understand the risks and potential payoffs of their strategies by comparing LP returns against simply holding assets (HODL).
 
 ---
+<img width="1577" height="849" alt="image" src="https://github.com/user-attachments/assets/7a07c955-8876-49e0-a19b-baea4aad2152" />
+
 
 ## 🚀 Overview
 
@@ -145,3 +147,4 @@ export default defineConfig([
   },
 ])
 ```
+
