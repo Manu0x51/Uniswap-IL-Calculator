@@ -1,67 +1,15 @@
 import React from 'react';
-import type { PositionState } from '../utils/uniswapMath';
-import { ChevronUp, ChevronDown } from 'lucide-react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { NumericInput } from "@/components/ui/NumericInput";
+import { usePosition } from "@/context/PositionContext";
 
-interface InputSectionProps {
-    values: PositionState;
-    onChange: (key: keyof PositionState, value: number) => void;
-}
-
-const NumericInput: React.FC<{
-    label: string,
-    value: number,
-    onChange: (val: number) => void,
-    step?: number
-}> = ({ label, value, onChange, step = 1 }) => {
-    const increment = () => onChange(value + step);
-    const decrement = () => onChange(Math.max(0, value - step));
-
-    return (
-        <div className="space-y-2">
-            <label className="block text-sm text-slate-400 mb-2 font-bold uppercase tracking-wider">
-                {label}
-            </label>
-            <div className="relative">
-                <input
-                    type="number"
-                    value={value}
-                    onChange={(e) => onChange(parseFloat(e.target.value) || 0)}
-                    className="w-full bg-slate-800 text-white text-lg rounded-xl px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-bold font-mono transition-all"
-                />
-
-                <div className="absolute right-2 top-1/2 -translate-y-1/2 flex flex-col">
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={increment}
-                        className="h-5 w-5 text-slate-300 hover:text-white"
-                    >
-                        <ChevronUp size={14} />
-                    </Button>
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={decrement}
-                        className="h-5 w-5 text-slate-300 hover:text-white"
-                    >
-                        <ChevronDown size={14} />
-                    </Button>
-                </div>
-            </div>
-        </div>
-    );
-};
-
-export const InputSection: React.FC<InputSectionProps> = ({ values, onChange }) => {
-    const handleFieldChange = (key: keyof PositionState) => (val: number) => {
-        onChange(key, val);
-    };
+export const InputSection: React.FC = () => {
+    const { state, updateState } = usePosition();
 
     const applyPreset = (percent: number) => {
-        onChange('minPrice', values.entryPrice * (1 - percent));
-        onChange('maxPrice', values.entryPrice * (1 + percent));
+        updateState('minPrice', state.entryPrice * (1 - percent));
+        updateState('maxPrice', state.entryPrice * (1 + percent));
     };
 
     return (
@@ -74,29 +22,29 @@ export const InputSection: React.FC<InputSectionProps> = ({ values, onChange }) 
                     <div className="space-y-4">
                         <NumericInput
                             label="Deposit Value"
-                            value={values.depositAmount}
-                            onChange={handleFieldChange('depositAmount')}
+                            value={state.depositAmount}
+                            onChange={(val) => updateState('depositAmount', val)}
                             step={100}
                         />
 
                         <NumericInput
                             label="Entry Price"
-                            value={values.entryPrice}
-                            onChange={handleFieldChange('entryPrice')}
+                            value={state.entryPrice}
+                            onChange={(val) => updateState('entryPrice', val)}
                             step={10}
                         />
 
                         <div className="grid grid-cols-2 gap-4">
                             <NumericInput
                                 label="Min Price"
-                                value={values.minPrice}
-                                onChange={handleFieldChange('minPrice')}
+                                value={state.minPrice}
+                                onChange={(val) => updateState('minPrice', val)}
                                 step={10}
                             />
                             <NumericInput
                                 label="Max Price"
-                                value={values.maxPrice}
-                                onChange={handleFieldChange('maxPrice')}
+                                value={state.maxPrice}
+                                onChange={(val) => updateState('maxPrice', val)}
                                 step={10}
                             />
                         </div>
@@ -126,27 +74,27 @@ export const InputSection: React.FC<InputSectionProps> = ({ values, onChange }) 
                                 <div className="relative">
                                     <input
                                         type="number"
-                                        value={values.currentPrice}
-                                        onChange={(e) => onChange('currentPrice', parseFloat(e.target.value) || 0)}
+                                        value={state.currentPrice}
+                                        onChange={(e) => updateState('currentPrice', parseFloat(e.target.value) || 0)}
                                         className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white text-lg font-bold font-mono focus:ring-2 focus:ring-[#fbbf24]/50 outline-none transition-all shadow-sm"
                                     />
                                     <div className="mt-4 px-1">
                                         <input
                                             type="range"
-                                            min={values.minPrice * 0.5}
-                                            max={values.maxPrice * 1.5}
-                                            step={values.entryPrice / 100}
-                                            value={values.currentPrice}
-                                            onChange={(e) => onChange('currentPrice', parseFloat(e.target.value) || 0)}
+                                            min={state.minPrice * 0.5}
+                                            max={state.maxPrice * 1.5}
+                                            step={state.entryPrice / 100}
+                                            value={state.currentPrice}
+                                            onChange={(e) => updateState('currentPrice', parseFloat(e.target.value) || 0)}
                                             className="w-full accent-[#fbbf24] h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-[#fbbf24] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:shadow-[0_0_12px_#fbbf24] [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white"
                                         />
                                     </div>
                                 </div>
 
                                 <div className="grid grid-cols-3 gap-2">
-                                    <Button variant="ghost" onClick={() => onChange('currentPrice', values.minPrice)} className="h-7 text-[#fbbf24] text-[10px] bg-[#fbbf24]/5 hover:bg-[#fbbf24]/10">MIN</Button>
-                                    <Button variant="ghost" onClick={() => onChange('currentPrice', values.entryPrice)} className="h-7 text-slate-400 text-[10px] bg-slate-900 hover:text-white">RESET</Button>
-                                    <Button variant="ghost" onClick={() => onChange('currentPrice', values.maxPrice)} className="h-7 text-[#fbbf24] text-[10px] bg-[#fbbf24]/5 hover:bg-[#fbbf24]/10">MAX</Button>
+                                    <Button variant="ghost" onClick={() => updateState('currentPrice', state.minPrice)} className="h-7 text-[#fbbf24] text-[10px] bg-[#fbbf24]/5 hover:bg-[#fbbf24]/10">MIN</Button>
+                                    <Button variant="ghost" onClick={() => updateState('currentPrice', state.entryPrice)} className="h-7 text-slate-400 text-[10px] bg-slate-900 hover:text-white">RESET</Button>
+                                    <Button variant="ghost" onClick={() => updateState('currentPrice', state.maxPrice)} className="h-7 text-[#fbbf24] text-[10px] bg-[#fbbf24]/5 hover:bg-[#fbbf24]/10">MAX</Button>
                                 </div>
                             </div>
                         </div>

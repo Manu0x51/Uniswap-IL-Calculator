@@ -28,7 +28,7 @@ function AppContent() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 h-full pb-8">
         {/* Left Column: Inputs */}
         <div className="lg:col-span-3 h-full">
-          <InputSection values={state} onChange={updateState} />
+          <InputSection />
         </div>
 
         {/* Right Column: Dashboard */}
