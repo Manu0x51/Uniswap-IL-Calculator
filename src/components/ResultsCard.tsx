@@ -1,22 +1,11 @@
-import React, { useMemo } from 'react';
-import type { PositionState } from '../utils/uniswapMath';
-import { calculateImpermanentLoss } from '../utils/uniswapMath';
+import React from 'react';
 import { ChevronDown, Info } from 'lucide-react';
+import { usePosition } from '../context/PositionContext';
+import { useImpermanentLoss } from '../hooks/useImpermanentLoss';
 
-interface ResultsCardProps {
-    state: PositionState;
-}
-
-export const ResultsCard: React.FC<ResultsCardProps> = ({ state }) => {
-    const { ilValue, ilPercentage, lpValue, hodlValue } = useMemo(() => {
-        return calculateImpermanentLoss(
-            state.depositAmount,
-            state.minPrice,
-            state.maxPrice,
-            state.entryPrice,
-            state.currentPrice
-        );
-    }, [state]);
+export const ResultsCard: React.FC = () => {
+    const { state } = usePosition();
+    const { ilValue, ilPercentage, lpValue, hodlValue } = useImpermanentLoss(state);
 
     const formatCurrency = (val: number) =>
         new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);

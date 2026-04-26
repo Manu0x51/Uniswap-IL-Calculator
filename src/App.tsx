@@ -6,7 +6,7 @@ import { LayoutDashboard } from 'lucide-react'; // Using layout icon for header
 import { PositionProvider, usePosition } from './context/PositionContext';
 
 function AppContent() {
-  const { state, updateState } = usePosition();
+  const { state } = usePosition();
 
   return (
     <div className="min-h-screen p-4 md:p-8 flex flex-col gap-6 max-w-[1600px] mx-auto">
@@ -35,7 +35,7 @@ function AppContent() {
         <div className="lg:col-span-9 flex flex-col gap-6">
           {/* Top Row: Metrics (Results Card) */}
           <div className="h-48">
-            <ResultsCard state={state} />
+            <ResultsCard />
           </div>
 
           {/* Bottom Row: Chart */}
