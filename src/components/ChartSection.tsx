@@ -1,7 +1,8 @@
 import React, { useMemo } from 'react';
 import { Maximize2 } from 'lucide-react';
-import type { PositionState } from '../utils/uniswapMath';
 import { calculateImpermanentLoss } from '../utils/uniswapMath';
+import { usePosition } from '../context/PositionContext';
+import { useImpermanentLoss } from '../hooks/useImpermanentLoss';
 import {
     AreaChart,
     Area,
@@ -14,11 +15,10 @@ import {
     ReferenceDot
 } from 'recharts';
 
-interface ChartSectionProps {
-    state: PositionState;
-}
+export const ChartSection: React.FC = () => {
+    const { state } = usePosition();
+    const currentStatus = useImpermanentLoss(state);
 
-export const ChartSection: React.FC<ChartSectionProps> = ({ state }) => {
     const data = useMemo(() => {
         const points = [];
         const steps = 200;
@@ -44,14 +44,6 @@ export const ChartSection: React.FC<ChartSectionProps> = ({ state }) => {
         }
         return points;
     }, [state.depositAmount, state.minPrice, state.maxPrice, state.entryPrice, state.currentPrice]);
-
-    const currentStatus = calculateImpermanentLoss(
-        state.depositAmount,
-        state.minPrice,
-        state.maxPrice,
-        state.entryPrice,
-        state.currentPrice
-    );
 
     const CustomReferenceLabel = (props: any) => {
         const { viewBox, value, fill } = props;
@@ -120,7 +112,7 @@ export const ChartSection: React.FC<ChartSectionProps> = ({ state }) => {
                             }}
                             itemStyle={{ fontSize: '12px', fontWeight: 'bold' }}
                             labelStyle={{ color: '#94a3b8', fontSize: '11px', marginBottom: '4px', fontFamily: 'monospace' }}
-                            formatter={(value: number | undefined) => [value ? `$${value.toFixed(2)}` : '$0.00', '']}
+                            formatter={(value) => [typeof value === 'number' ? `$${value.toFixed(2)}` : '$0.00', '']}
                         />
 
                         {/* HODL Line (Yellow/Gold) */}

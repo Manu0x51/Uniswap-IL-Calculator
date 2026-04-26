@@ -3,11 +3,9 @@ import { InputSection } from './components/InputSection';
 import { ResultsCard } from './components/ResultsCard';
 import { ChartSection } from './components/ChartSection';
 import { LayoutDashboard } from 'lucide-react'; // Using layout icon for header
-import { PositionProvider, usePosition } from './context/PositionContext';
+import { PositionProvider } from './context/PositionContext';
 
 function AppContent() {
-  const { state } = usePosition();
-
   return (
     <div className="min-h-screen p-4 md:p-8 flex flex-col gap-6 max-w-[1600px] mx-auto">
       {/* Header */}
@@ -40,7 +38,7 @@ function AppContent() {
 
           {/* Bottom Row: Chart */}
           <div className="flex-1 min-h-[500px]">
-            <ChartSection state={state} />
+            <ChartSection />
           </div>
         </div>
       </div>
