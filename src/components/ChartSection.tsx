@@ -15,6 +15,25 @@ import {
     ReferenceDot
 } from 'recharts';
 
+// Custom label component for reference lines - defined outside render to prevent recreation
+interface CustomReferenceLabelProps {
+    viewBox?: { x: number; height: number };
+    value: string;
+    fill: string;
+}
+
+const CustomReferenceLabel: React.FC<CustomReferenceLabelProps> = ({ viewBox, value, fill }) => {
+    if (!viewBox) return null;
+    const x = viewBox.x;
+    const y = viewBox.height - 10;
+    return (
+        <g>
+            <rect x={x - 40} y={y - 15} width="80" height="24" rx="4" fill="#0b0e14" stroke={fill} strokeWidth="1" />
+            <text x={x} y={y} textAnchor="middle" fill={fill} fontSize="10" fontWeight="bold" dy={1}>{value}</text>
+        </g>
+    );
+};
+
 export const ChartSection: React.FC = () => {
     const { state } = usePosition();
     const currentStatus = useImpermanentLoss(state);
@@ -44,18 +63,6 @@ export const ChartSection: React.FC = () => {
         }
         return points;
     }, [state.depositAmount, state.minPrice, state.maxPrice, state.entryPrice, state.currentPrice]);
-
-    const CustomReferenceLabel = (props: any) => {
-        const { viewBox, value, fill } = props;
-        const x = viewBox.x;
-        const y = viewBox.height - 10;
-        return (
-            <g>
-                <rect x={x - 40} y={y - 15} width="80" height="24" rx="4" fill="#0b0e14" stroke={fill} strokeWidth="1" />
-                <text x={x} y={y} textAnchor="middle" fill={fill} fontSize="10" fontWeight="bold" dy={1}>{value}</text>
-            </g>
-        )
-    };
 
     const isInRange = state.currentPrice >= state.minPrice && state.currentPrice <= state.maxPrice;
 

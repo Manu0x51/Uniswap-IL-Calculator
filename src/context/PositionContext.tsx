@@ -33,6 +33,7 @@ export function PositionProvider({ children }: PositionProviderProps) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function usePosition() {
   const context = useContext(PositionContext);
   if (context === undefined) {
