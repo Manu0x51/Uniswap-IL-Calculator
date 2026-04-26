@@ -1,0 +1,25 @@
+{
+  "active": true,
+  "spec": "002-component-architecture-refactor",
+  "state": "planning",
+  "subtasks": {
+    "completed": 0,
+    "total": 0,
+    "in_progress": 1,
+    "failed": 0
+  },
+  "phase": {
+    "current": "Add New State Management",
+    "id": null,
+    "total": 3
+  },
+  "workers": {
+    "active": 0,
+    "max": 1
+  },
+  "session": {
+    "number": 3,
+    "started_at": "2026-04-26T08:42:14.592634"
+  },
+  "last_update": "2026-04-26T08:47:19.970676"
+}
