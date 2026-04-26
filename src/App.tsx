@@ -1,23 +1,12 @@
-import { useState } from 'react';
 import './index.css';
-import type { PositionState } from './utils/uniswapMath';
 import { InputSection } from './components/InputSection';
 import { ResultsCard } from './components/ResultsCard';
 import { ChartSection } from './components/ChartSection';
 import { LayoutDashboard } from 'lucide-react'; // Using layout icon for header
+import { PositionProvider, usePosition } from './context/PositionContext';
 
-function App() {
-  const [state, setState] = useState<PositionState>({
-    depositAmount: 1000,
-    entryPrice: 3000,
-    minPrice: 1800,
-    maxPrice: 5000,
-    currentPrice: 3000,
-  });
-
-  const handleStateChange = (key: keyof PositionState, value: number) => {
-    setState((prev) => ({ ...prev, [key]: value }));
-  };
+function AppContent() {
+  const { state, updateState } = usePosition();
 
   return (
     <div className="min-h-screen p-4 md:p-8 flex flex-col gap-6 max-w-[1600px] mx-auto">
@@ -39,7 +28,7 @@ function App() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 h-full pb-8">
         {/* Left Column: Inputs */}
         <div className="lg:col-span-3 h-full">
-          <InputSection values={state} onChange={handleStateChange} />
+          <InputSection values={state} onChange={updateState} />
         </div>
 
         {/* Right Column: Dashboard */}
@@ -56,6 +45,14 @@ function App() {
         </div>
       </div>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <PositionProvider>
+      <AppContent />
+    </PositionProvider>
   );
 }
 
